@@ -1,0 +1,45 @@
+import React, { useEffect, useState } from 'react';
+import logo from './logo.svg';
+import styled from 'styled-components'
+import './App.css';
+import axios, { AxiosResponse } from 'axios';
+
+const StyledButton = styled.button`
+  background: yellow
+`
+
+interface MaoYanResponse{
+  data: {
+    data: {
+      hot: MaoYanMoiveInfo[];
+    }
+  }
+}
+
+interface MaoYanMoiveInfo{
+  id: number;
+  nm: string;
+
+}
+
+function App() {
+
+  const [content, setContent] = useState<string>('熊哲皓');
+
+  const onButtonClicked = () => {
+    setContent('孙佳薇');
+  }
+
+  useEffect(() => {
+    axios.get('/api/mmdb/movie/v3/list/hot.json?ct=%E5%8C%97%E4%BA%AC&ci=1&channelId=4')
+      .then(result => {
+        setContent(result.data.data.hot[0].nm)
+      })
+  }, [])
+
+  return (
+    <StyledButton onClick={onButtonClicked}>{content}</StyledButton>
+  );
+}
+
+export default App;
